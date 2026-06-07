@@ -1,5 +1,4 @@
-﻿require("dotenv").config();
-
+require("dotenv").config();
 const { App } = require("@slack/bolt");
 
 const app = new App({
@@ -8,63 +7,45 @@ const app = new App({
   socketMode: true
 });
 
-// /calc handler: akzeptiert "3+4", "3 + 4" oder "3 4"
 app.command("/calc", async ({ command, ack, respond }) => {
   await ack();
-  const text = (command.text || "").trim();
+  const text = command.text.trim();
+
   if (!text) {
-    await respond({ text: "Bitte gib zwei Zahlen ein, z.B. `/calc 3 4`" });
+    await respond({ text: "Bitte Zahlen eingeben, z.B. `/calc 5+5`" });
     return;
   }
 
   let s1, s2;
   if (text.includes("+")) {
-    [s1, s2] = text.split(/\s*\+\s*/);
+    [s1, s2] = text.split("+");
   } else {
-    [s1, s2] = text.split(/\s+/);
+    [s1, s2] = text.split(" ");
   }
 
-  if (!s1 || !s2) {
-    await respond({ text: "Bitte gib zwei Zahlen ein, z.B. `/calc 3 4`" });
-    return;
-  }
+  const zahl1 = parseInt(s1);
+  const zahl2 = parseInt(s2);
 
-  const zahl1 = parseFloat(s1.trim());
-  const zahl2 = parseFloat(s2.trim());
   if (isNaN(zahl1) || isNaN(zahl2)) {
-    await respond({ text: "Bitte gib gültige Zahlen ein, z.B. `/calc 3 4`" });
-    return;
-  }
-
-  await respond({ text: `Das Ergebnis ist ${zahl1 + zahl2}!` });
-});
-
-// vorhandener /dsb-ping handler erhalten
-app.command("/dsb-ping", async ({ command, ack, respond }) => {
-  const text = (command.text || "").trim();
-  if (!text) {
-    await ack();
-    await respond({ text: "Bitte gib zwei Zahlen ein, z.B. `/dsb-ping 3 4`" });
-    return;
-  }
-
-  let s1, s2;
-  if (text.includes("+")) {
-    [s1, s2] = text.split(/\s*\+\s*/);
+    await respond({ text: "Das sind keine gültigen Zahlen!" });
   } else {
-    [s1, s2] = text.split(/\s+/);
+    await respond({ text: `Ergebnis: ${zahl1 + zahl2}` });
   }
+}); 
 
-  const zahl1 = parseFloat(s1) || 0;
-  const zahl2 = parseFloat(s2) || 0;
-  const summe = zahl1 + zahl2;
-
-  console.log(s1, s2);
+app.command("/hello", async ({ command, ack, respond }) => {
   await ack();
-  await respond({ text: `hallo ${summe}!` });
+  await respond({ text: "Hello World!" });
+}); 
+
+app.command("/dsb-ping", async ({ command, ack, respond }) => {
+  const start = Date.now();
+  await ack();
+  const latency = Date.now() - start;
+  await respond({ text: `Pong!\nLatency: ${latency}ms` });
 });
 
 (async () => {
   await app.start();
-  console.log("bot is running!");
+  console.log(" Bot läuft und hört auf /calc und /hello und /dsb-ping Befehle");
 })();

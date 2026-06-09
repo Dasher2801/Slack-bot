@@ -40,7 +40,7 @@ app.command("/calc", async ({ command, ack, respond }) => {
   const zahl2 = parseInt(s2);
 
   if (isNaN(zahl1) || isNaN(zahl2)) {
-    await respond({ text: "Das sind keine gültigen Zahlen! Beispiel: `/calc 12/3`" });
+    await respond({ text: "Das sind keine gültigen Zahlen! versuche es mal mit: `/calc 12/3`" });
     return;
   }
 

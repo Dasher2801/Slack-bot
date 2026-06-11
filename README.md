@@ -11,3 +11,4 @@ I wish you much fun with this bot
 The commands are: /calc x+y /dsb-ping /hello
 
 (DON'T USE /DSB-CALC OR /DSB-HELLO. THEY DON'T WORK)
+(AND MAKE SHURE THE COMMANDS ARE USED WITH DASHERS SLACK-BOT)
